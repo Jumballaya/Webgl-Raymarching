@@ -9,18 +9,11 @@ type ShaderType =
   | typeof WebGL2RenderingContext.FRAGMENT_SHADER;
 
 export class Shader {
-  public name: string;
   public program: WebGLProgram;
   private ctx: WebGL2RenderingContext;
   private uniforms: Map<string, TaggedUniform> = new Map();
 
-  constructor(
-    ctx: WebGL2RenderingContext,
-    name: string,
-    vertex: string,
-    fragment: string
-  ) {
-    this.name = name;
+  constructor(ctx: WebGL2RenderingContext, vertex: string, fragment: string) {
     this.ctx = ctx;
 
     const program = ctx.createProgram();

@@ -170,8 +170,8 @@ export class WebGL {
     this.context.drawBuffers(buffers);
   }
 
-  public createShader(name: string, vertex: string, fragment: string): Shader {
-    const shader = new Shader(this.context, name, vertex, fragment);
+  public createShader(vertex: string, fragment: string): Shader {
+    const shader = new Shader(this.context, vertex, fragment);
     return shader;
   }
 

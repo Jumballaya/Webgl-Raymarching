@@ -3,6 +3,7 @@ import vertexShader from "./shaders/vertex.glsl?raw";
 import fragmentShader from "./shaders/fragment.glsl?raw";
 
 import { WebGL } from "./gl/WebGL";
+import { vec2 } from "gl-matrix";
 
 const positions = new Float32Array([-1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0]);
 
@@ -46,20 +47,38 @@ async function main() {
     data: indices,
   });
 
+  const resolution: vec2 = [window.innerWidth, window.innerHeight];
   const shader = webgl.createShader(vertexShader, fragmentShader);
+  shader.bind();
+  shader.uniform("u_time", { type: "float", value: 0 });
+  shader.uniform("u_resolution", { type: "vec2", value: resolution });
+  shader.unbind();
 
   window.addEventListener("resize", () => {
-    ctx.canvas.width = window.innerWidth;
-    ctx.canvas.height = window.innerHeight;
-    webgl.viewport(0, 0, [window.innerWidth, window.innerHeight]);
+    resolution[0] = window.innerWidth;
+    resolution[1] = window.innerHeight;
+    ctx.canvas.width = resolution[0];
+    ctx.canvas.height = resolution[1];
+    shader.bind();
+    shader.uniform("u_resolution", { type: "vec2", value: resolution });
+    shader.unbind();
   });
 
   webgl.clearColor([0, 0, 0]);
+  let time = Date.now();
+  let t = 0;
   const loop = () => {
+    const curTime = Date.now();
+    const deltaTime = curTime - time;
+    time = curTime;
+    t += deltaTime / 1000;
+
     webgl.clear("color");
+    webgl.viewport(0, 0, resolution);
     vertexArray.bind();
     indexBuffer.bind();
     shader.bind();
+    shader.uniform("u_time", { type: "float", value: t });
     webgl.drawElements(indexBuffer.count, "triangles");
     shader.unbind();
     indexBuffer.unbind();

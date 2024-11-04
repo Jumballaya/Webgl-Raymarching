@@ -2,4 +2,4 @@
 
 ### Demo
 
-[Check it out yourself](https://github.com)
+[Test this out yourself](https://jumballaya.github.io/Webgl-Raymarching/)
